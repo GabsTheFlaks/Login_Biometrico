@@ -1,63 +1,103 @@
-# 🔒 Login Biométrico com Python e OpenCV
+<div align="center">
+  <h1>🔒 Login Biométrico com Python e OpenCV</h1>
+  <p><i>Um sistema de login biométrico moderno, leve e eficiente utilizando modelos de IA nativos do OpenCV.</i></p>
+</div>
 
-Este projeto implementa um sistema de login biométrico simples, rápido e moderno utilizando Python e os modelos de IA nativos do OpenCV (**YuNet** para detecção facial e **SFace** para extração de características).
+<br>
 
-Diferente de abordagens mais antigas (como as bibliotecas `dlib` e `face_recognition` que costumam causar problemas de compilação em ambientes Windows ou versões mais recentes do Python), este projeto roda suavemente e requer pouquíssimas dependências.
+Este projeto implementa uma solução de login biométrico utilizando a linguagem Python aliada aos modelos de Inteligência Artificial nativos da biblioteca OpenCV: **YuNet** (para detecção facial) e **SFace** (para extração e reconhecimento de características).
 
-## 🚀 Como funciona
+Ao contrário de abordagens tradicionais que dependem de bibliotecas como `dlib` e `face_recognition` — que frequentemente apresentam desafios de compilação em ambientes Windows ou conflitos em versões mais recentes do Python —, esta implementação destaca-se pela sua facilidade de execução, alta performance e baixa dependência de pacotes externos.
 
-O projeto é dividido em duas partes principais:
-1. **Cadastro (`cadastro.py`)**: Captura o rosto via webcam, extrai o vetor matemático (embedding) das suas características faciais usando Deep Learning e o salva localmente de forma segura num arquivo binário `.npy`. (Não salvamos fotos JPG!).
-2. **Validação (`login.py`)**: Carrega a biometria salva, captura o rosto de quem está na câmera em tempo real e calcula a Similaridade de Cosseno entre os rostos. Se a pontuação passar do limiar de segurança (0.363), o acesso é liberado.
+---
+
+## ✨ Principais Características
+
+- **Leveza e Eficiência**: Requer pouquíssimas dependências para funcionar, garantindo uma instalação rápida e livre de dores de cabeça.
+- **Foco em Privacidade**: A biometria é processada e armazenada localmente em um vetor matemático (arquivo `.npy`), eliminando a necessidade de armazenar imagens ou fotografias dos usuários.
+- **Alta Compatibilidade**: Construído utilizando as ferramentas nativas do OpenCV, o que confere ao projeto uma estabilidade superior em diversos sistemas operacionais.
+- **Simplicidade de Integração**: Arquitetura direta, facilitando a sua adaptação como um módulo de autenticação em aplicações maiores.
+
+---
+
+## 🚀 Arquitetura e Funcionamento
+
+A estrutura do sistema é dividida de forma modular em duas etapas fundamentais:
+
+1. **Módulo de Cadastro (`cadastro.py`)**:
+   - Acessa a webcam e captura a imagem do usuário.
+   - Utiliza as redes neurais profundas (Deep Learning) para extrair o vetor matemático (embedding) que representa as características únicas da face detectada.
+   - Salva estas informações de forma segura no disco local em um arquivo binário `.npy`.
+
+2. **Módulo de Validação (`login.py`)**:
+   - Realiza o carregamento da biometria previamente cadastrada.
+   - Captura, em tempo real, o rosto posicionado diante da câmera.
+   - Calcula a **Similaridade de Cosseno** entre a face lida e a biometria arquivada. O acesso é concedido exclusivamente se a pontuação obtida superar o limiar de segurança estipulado (0.363).
+
+---
 
 ## 🛠️ Pré-requisitos
 
-Certifique-se de ter o Python instalado na sua máquina (idealmente Python 3.10+).
-Instale as bibliotecas necessárias executando:
+Para que o projeto funcione corretamente, certifique-se de ter o Python instalado em seu ambiente (versão recomendada: **Python 3.10+**).
+
+Instale as dependências necessárias através do gerenciador de pacotes `pip`:
 
 ```bash
 pip install opencv-python numpy
 ```
 
+---
+
 ## 📦 Modelos Pré-Treinados (ONNX)
 
-Para o código funcionar, você precisa baixar os dois modelos oficiais do projeto **OpenCV Zoo** e colocá-los na mesma pasta dos seus scripts `.py`.
+O funcionamento correto da aplicação depende de dois modelos oficiais do repositório **OpenCV Zoo**. É obrigatório realizar o download dos arquivos abaixo e alocá-los no mesmo diretório em que se encontram os scripts `.py`:
 
 1. **YuNet (Detector Facial)**: [Download `face_detection_yunet_2023mar.onnx`](https://github.com/opencv/opencv_zoo/raw/main/models/face_detection_yunet/face_detection_yunet_2023mar.onnx)
-2. **SFace (Reconhecedor)**: [Download `face_recognition_sface_2021dec.onnx`](https://github.com/opencv/opencv_zoo/raw/main/models/face_recognition_sface/face_recognition_sface_2021dec.onnx)
+2. **SFace (Reconhecedor Facial)**: [Download `face_recognition_sface_2021dec.onnx`](https://github.com/opencv/opencv_zoo/raw/main/models/face_recognition_sface/face_recognition_sface_2021dec.onnx)
 
-## 💻 Como usar
+---
 
-### Passo 1: Registre seu rosto
-Execute o script de cadastro no seu terminal:
+## 💻 Como Usar
+
+### Passo 1: Cadastro da Biometria Facial
+No terminal, execute o script correspondente ao cadastro:
+
 ```bash
 python cadastro.py
 ```
-A sua webcam será iniciada. Posicione o seu rosto na frente da câmera até que ele seja detectado (um retângulo verde aparecerá ao redor do seu rosto). Pressione a tecla **`c`** para capturar e salvar sua biometria.
+*A sua webcam será ativada. Posicione-se de frente para a câmera até que a detecção ocorra (indicada por um retângulo verde ao redor do rosto). Em seguida, pressione a tecla **`c`** para capturar e gravar os seus dados biométricos.*
 
-### Passo 2: Faça o Login
-Com o arquivo `biometria_usuario.npy` gerado, rode o script de validação:
+### Passo 2: Autenticação / Login
+Com o arquivo `biometria_usuario.npy` devidamente gerado no passo anterior, inicie o processo de validação:
+
 ```bash
 python login.py
 ```
-A webcam abrirá novamente. O sistema irá comparar o seu rosto ao vivo com a biometria salva. Se for você, a mensagem **"Acesso Liberado!"** aparecerá em verde junto com o seu *score* de similaridade. Pressione **`q`** para sair.
+*A câmera será novamente acionada e o sistema fará a comparação do rosto detectado com a biometria cadastrada. Em caso de sucesso, será exibida na tela a mensagem **"Acesso Liberado!"** destacada em verde, acompanhada da sua pontuação (score) de similaridade. Pressione a tecla **`q`** a qualquer momento para encerrar.*
+
+---
 
 ## 💡 Ideias de Integração (Launcher)
 
-Você pode usar esse sistema como uma "chave" de entrada para abrir outros programas e jogos! 
-No arquivo `login.py`, substitua o trecho de "Acesso Liberado" para desativar a câmera e chamar o seu app principal:
+A flexibilidade deste projeto permite que ele opere como uma "chave" de segurança para o acesso a outros softwares, painéis ou jogos.
+
+Como exemplo prático, você pode modificar o script `login.py`. Substitua o bloco onde a validação é bem-sucedida pelo encerramento da câmera e o acionamento da sua aplicação principal:
 
 ```python
 import subprocess
 
-# ... código
+# ... restante do código ...
+
 if score >= LIMIAR_COSSENO:
     cap.release()
     cv2.destroyAllWindows()
-    # Inicia o seu sistema/jogo real
+
+    # Inicia o seu sistema ou jogo principal
     subprocess.run(["python", "meu_jogo.py"])
     break
 ```
 
 ---
-*Projeto criado para fins educacionais e provas de conceito.*
+<div align="center">
+  <i>Projeto desenvolvido com propósitos educacionais e como prova de conceito (PoC).</i>
+</div>
